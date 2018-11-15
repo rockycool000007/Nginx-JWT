@@ -3,17 +3,18 @@ limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
 
 server {
     listen 80;
-
+	
+	set $limit_stage stage_1
 	if ($http_Authorization = "abc") {
-		location /by-uri/stage_1 {
-			limit_req zone=stage_2 nodelay;
-			add_header X-debug-message "marked" always;
-			try_files $uri /index.html;
-		}
-	} else {
-		location /by-uri/stage_1 {
-			limit_req zone=stage_1 nodelay;
-			try_files $uri /index.html;
-		}
+		set $limit_stage stage_2
 	}
+    location /by-uri/stage {
+		limit_req zone=$limit_stage nodelay;
+		try_files $uri /index.html;
+    }
+
+    location /by-uri/stage_2 {
+        limit_req zone=stage_2 nodelay;
+        try_files $uri /index.html;
+    }
 }
