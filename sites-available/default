@@ -1,20 +1,16 @@
-limit_req_zone $request_uri zone=by_uri:10m rate=5r/s;
+limit_req_zone $request_uri zone=stage_1:10m rate=5r/s;
+limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
 
 server {
     listen 80;
 
-    location /by-uri/burst0 {
-        limit_req zone=by_uri;
+    location /by-uri/stage_1 {
+        limit_req zone=stage_1;
         try_files $uri /index.html;
     }
 
-    location /by-uri/burst5 {
-        limit_req zone=by_uri burst=5;
-        try_files $uri /index.html;
-    }
-
-    location /by-uri/burst5_nodelay {
-        limit_req zone=by_uri burst=5 nodelay;
+    location /by-uri/stage_2 {
+        limit_req zone=stage_2;
         try_files $uri /index.html;
     }
 }
