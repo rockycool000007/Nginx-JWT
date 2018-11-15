@@ -1,21 +1,19 @@
-map $http_Authorization $auth {
-    default       1;
-    "abc" 0;
-}
-
-limit_req_zone $auth zone=stage_1:10m rate=5r/s;
-limit_req_zone $auth zone=stage_2:10m rate=1r/s;
+limit_req_zone $request_uri zone=stage_1:10m rate=5r/s;
+limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
 
 server {
     listen 80;
-	
+	error_page 418 = @limitreq;	
+
     location /by-uri/stage {
+		if ($http_Authorization = "abc") {
+			return 418;
+		}
 		limit_req zone=stage_1 burst=5 nodelay;
-		limit_req zone=stage_2 nodelay;
 		try_files $uri /index.html;
     }
 
-    location /by-uri/stage_2 {
+    location @limitreq {
         limit_req zone=stage_2 nodelay;
         try_files $uri /index.html;
     }
