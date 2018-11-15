@@ -21,7 +21,6 @@ server {
 
     location /by-uri/stage_2 {
         limit_req zone=stage_2 nodelay;
-		echo "args: $args"
         try_files $uri /index.html;
     }
 }
