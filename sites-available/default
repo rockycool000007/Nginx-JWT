@@ -1,6 +1,6 @@
 map $http_Authorization $auth {
     default       1;
-    "!-" 0;
+    "abc" 0;
 }
 
 limit_req_zone $auth zone=stage_1:10m rate=5r/s;
@@ -11,6 +11,7 @@ server {
 	
     location /by-uri/stage {
 		limit_req zone=stage_1 burst=5 nodelay;
+		limit_req zone=stage_2 nodelay;
 		try_files $uri /index.html;
     }
 
