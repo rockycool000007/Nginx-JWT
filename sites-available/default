@@ -4,10 +4,10 @@ limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
 server {
     listen 80;
 
-	if ($http_Authorization ~ "abc"){
+	if ($http_Authorization ~ "abc") {
 		add_header X-debug-message "marked" always
 	}
-	
+
     location /by-uri/stage_1 {
         limit_req zone=stage_1 burst=5 nodelay;
 		
