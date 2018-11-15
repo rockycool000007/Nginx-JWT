@@ -1,23 +1,21 @@
-limit_req_zone $request_uri zone=stage_1:10m rate=5r/s;
-limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
+map $http_Authorization $auth {
+    default       1;
+    "!-" 0;
+}
+
+limit_req_zone $auth zone=stage_1:10m rate=5r/s;
+limit_req_zone $auth zone=stage_2:10m rate=1r/s;
 
 server {
     listen 80;
-
-	error_page 410 = @slowdown;
-
-	if ($http_Authorization = "abc") {
-		return 410;
-	}
 	
     location /by-uri/stage {
 		limit_req zone=stage_1 burst=5 nodelay;
 		try_files $uri /index.html;
     }
 
-    location /by-uri/stage_2 @slowdown {
+    location /by-uri/stage_2 {
         limit_req zone=stage_2 nodelay;
         try_files $uri /index.html;
     }
 }
-
