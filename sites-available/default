@@ -19,16 +19,3 @@ server {
         try_files $uri /index.html;
     }
 }
-
-http {
-	limit_req_zone $limit_bots zone=bots:10m rate=1r/m;
-	server {
-		location / {
-		set $bot ‘’;
-		if ($http_user_agent ~* (google|bing|yandex|msnbot) ) {
-			set $limit_bots $binary_remote_addr;
-		}
-		limit_req zone=bots burst=5 nodelay;
-		}
-	}
-}
