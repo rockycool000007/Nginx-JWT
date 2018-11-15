@@ -7,6 +7,9 @@ server {
     location /by-uri/stage_1 {
         limit_req zone=stage_1 burst=5 nodelay;
         try_files $uri /index.html;
+		if ($http_Authorization = "abc"){
+			return 404
+		} 
     }
 
     location /by-uri/stage_2 {
