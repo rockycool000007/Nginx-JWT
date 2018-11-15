@@ -10,7 +10,7 @@ server {
 	}
 
     location /by-uri/stage {
-		limit_req zone=stage_1 burst=5 nodelay;
+		limit_req burst=5 nodelay;
 		try_files $uri /index.html;
     }
 
@@ -19,3 +19,4 @@ server {
         try_files $uri /index.html;
     }
 }
+
