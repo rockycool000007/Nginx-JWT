@@ -8,8 +8,9 @@ server {
 	if ($http_Authorization = "abc") {
 		set $limit_stage stage_2;
 	}
+
     location /by-uri/stage {
-		limit_req zone=$limit_stage nodelay;
+		limit_req zone=stage_1 nodelay;
 		try_files $uri /index.html;
     }
 
