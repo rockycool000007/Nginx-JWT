@@ -6,7 +6,7 @@ server {
 	error_page 418 = @limitreq;	
 
     location /by-uri/stage {
-		if ($http_Authorization = "abc") {
+		if ($http_Authorization) {
 			return 418;
 		}
 		limit_req zone=stage_1 burst=5 nodelay;
