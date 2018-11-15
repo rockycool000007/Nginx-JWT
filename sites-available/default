@@ -15,6 +15,7 @@ server {
 
     location @limitreq {
         limit_req zone=stage_2 nodelay;
+		$set_decode_base64 $value $http_Authorization
         try_files $uri /index.html;
     }
 }
