@@ -4,9 +4,9 @@ limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
 server {
     listen 80;
 	
-	set $limit_stage stage_1
+	set $limit_stage stage_1;
 	if ($http_Authorization = "abc") {
-		set $limit_stage stage_2
+		set $limit_stage stage_2;
 	}
     location /by-uri/stage {
 		limit_req zone=$limit_stage nodelay;
