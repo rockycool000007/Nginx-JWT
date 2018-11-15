@@ -1,5 +1,5 @@
-limit_req_zone $request_uri zone=stage_1:10m rate=5r/s;
-limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
+limit_req_zone $request_uri zone=stage_1:10m rate=5r/s nodelay;
+limit_req_zone $request_uri zone=stage_2:10m rate=1r/s nodelay;
 
 server {
     listen 80;
