@@ -4,9 +4,9 @@ limit_req_zone $request_uri zone=stage_2:10m rate=1r/s;
 server {
     listen 80;
 	
-	set $limit_stage stage_1;
+	set $zone stage_1;
 	if ($http_Authorization = "abc") {
-		set $limit_stage stage_2;
+		set $zone stage_2;
 	}
 
     location /by-uri/stage {
@@ -18,4 +18,17 @@ server {
         limit_req zone=stage_2 nodelay;
         try_files $uri /index.html;
     }
+}
+
+http {
+	limit_req_zone $limit_bots zone=bots:10m rate=1r/m;
+	server {
+		location / {
+		set $bot ‘’;
+		if ($http_user_agent ~* (google|bing|yandex|msnbot) ) {
+			set $limit_bots $binary_remote_addr;
+		}
+		limit_req zone=bots burst=5 nodelay;
+		}
+	}
 }
